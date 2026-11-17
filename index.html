@@ -42,10 +42,10 @@
     <!-- Контент вкладок -->
     <main class="flex-1 p-3.5 space-y-4">
       
-      <!-- ВКЛАДКА 1: ГРАФІК ЗМІН -->
+      <!-- ВКЛАДКА 1: ГРАФІК ЗМІН ТА БОКС -->
       <section id="tab-shifts" class="space-y-3.5">
         
-        <!-- Інформаційний віджет головної сторінки -->
+        <!-- Інформаційний віджет -->
         <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-4 text-white shadow-lg space-y-3">
           <div class="flex justify-between items-start">
             <div>
@@ -118,6 +118,7 @@
             <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full border-2 border-slate-500 inline-block"></span> Вихідний</span>
             <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-amber-500 inline-block"></span> Чергування</span>
             <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Відпустка</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 inline-block"></span> 🥊 Бокс</span>
           </div>
         </div>
       </section>
@@ -197,18 +198,33 @@
       </button>
     </nav>
 
-    <!-- Оновлене чисте модальне вікно дня з випадаючим меню -->
+    <!-- Оновлене модальне вікно дня (тільки зміни + перемикач боксу) -->
     <div id="day-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
       <div class="bg-white w-full max-w-[480px] rounded-t-3xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
           <div>
             <h3 id="modal-day-title" class="font-bold text-base text-slate-900"></h3>
-            <p class="text-xs text-slate-500">Актуальна інформація на день</p>
+            <p class="text-xs text-slate-500">Інформація та тренування на день</p>
           </div>
           <button onclick="closeDayModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
         </div>
         
-        <!-- Список членів сім'ї та їх статус із випадаючим меню -->
+        <!-- Блок тренування з боксу (включити/виключити) -->
+        <div class="bg-purple-50 border border-purple-200 p-3 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🥊</span>
+            <div>
+              <p class="text-xs font-bold text-purple-900">Тренування з боксу</p>
+              <p class="text-[10px] text-purple-700">Запланувати бокс на цей день</p>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="modal-box-toggle" onchange="toggleBoxTraining()" class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+          </label>
+        </div>
+
+        <!-- Список членів сім'ї та їх статус -->
         <div id="modal-users-shifts" class="space-y-2"></div>
 
         <div class="pt-2 border-t border-slate-100">
@@ -281,6 +297,7 @@
         { id: 'u4', name: 'Тато', color: '#ea580c' }
       ],
       shifts: {},
+      boxing: {}, // Зберігає дні, коли є бокс (наприклад, {'2026-11-17': true})
       events: [],
       shopping: []
     };
@@ -313,14 +330,14 @@
     async function loadState() {
       document.getElementById('sync-room-input').value = cloudRoom;
       try {
-        const local = localStorage.getItem('family_assistant_v3_' + cloudRoom);
+        const local = localStorage.getItem('family_assistant_v4_' + cloudRoom);
         if (local) {
           state = JSON.parse(local);
         } else {
           seedInitialData();
         }
       } catch (e) {
-        const local = localStorage.getItem('family_assistant_v3_' + cloudRoom);
+        const local = localStorage.getItem('family_assistant_v4_' + cloudRoom);
         if (local) state = JSON.parse(local);
         else seedInitialData();
       }
@@ -329,13 +346,13 @@
     }
 
     async function saveState() {
-      localStorage.setItem('family_assistant_v3_' + cloudRoom, JSON.stringify(state));
+      localStorage.setItem('family_assistant_v4_' + cloudRoom, JSON.stringify(state));
       document.getElementById('sync-status').textContent = '● Збережено';
       document.getElementById('sync-status').className = 'text-[11px] text-emerald-600 font-medium';
     }
 
     async function silentSync() {
-      const local = localStorage.getItem('family_assistant_v3_' + cloudRoom);
+      const local = localStorage.getItem('family_assistant_v4_' + cloudRoom);
       if (local) {
         const parsed = JSON.parse(local);
         if (JSON.stringify(parsed) !== JSON.stringify(state)) {
@@ -371,16 +388,14 @@
 
       state.shifts[k1] = { u1: 'work', u2: 'off', u3: 'off', u4: 'work' };
       state.shifts[k2] = { u1: 'off', u2: 'work', u3: 'work', u4: 'off' };
+      state.boxing[k1] = true; // Приклад боксу на сьогодні
 
       state.events = [
-        { id: 'e1', date: k1, time: '10:00', title: 'Забрати посилку з пошти', user: 'u1', priority: 'normal', note: '', done: false },
-        { id: 'e2', date: k1, time: '17:00', title: 'Сімейні справи / садок', user: 'u2', priority: 'high', note: '', done: false }
+        { id: 'e1', date: k1, time: '10:00', title: 'Забрати посилку з пошти', user: 'u1', priority: 'normal', note: '', done: false }
       ];
 
       state.shopping = [
-        { id: 's1', title: 'Молоко та хліб', qty: '2 шт', category: 'Продукти', bought: false },
-        { id: 's2', title: 'Вологі серветки', qty: '1 уп', category: 'Дитяче', bought: false },
-        { id: 's3', title: 'Омивач скла', qty: '4 л', category: 'Авто / Інструменти', bought: true }
+        { id: 's1', title: 'Молоко та хліб', qty: '2 шт', category: 'Продукти', bought: false }
       ];
       saveState();
     }
@@ -423,9 +438,11 @@
 
       const dayShifts = state.shifts[todayKey] || {};
       const workingNow = state.users.filter(u => dayShifts[u.id] === 'work').map(u => u.name);
-      document.getElementById('header-today-title').textContent = workingNow.length > 0 
-        ? `На роботі: ${workingNow.join(', ')}` 
-        : 'Сьогодні всі відпочивають 🎉';
+      const hasBox = state.boxing[todayKey];
+      
+      let titleText = workingNow.length > 0 ? `Робота: ${workingNow.join(', ')}` : 'Всі відпочивають';
+      if (hasBox) titleText += ' | 🥊 Бокс';
+      document.getElementById('header-today-title').textContent = titleText;
 
       const todayEvents = state.events.filter(e => e.date === todayKey && !e.done).length;
       document.getElementById('widget-events-count').textContent = `${todayEvents} активних`;
@@ -511,9 +528,14 @@
         const dateKey = formatDateKey(ui.currentYear, ui.currentMonth, day);
         const isToday = dateKey === todayKey;
         const dayShifts = state.shifts[dateKey] || {};
+        const hasBox = state.boxing[dateKey];
         const dayEvents = state.events.filter(e => e.date === dateKey && !e.done);
 
         let badgesHtml = '';
+        if (hasBox) {
+          badgesHtml += `<span class="w-4 h-4 rounded-full bg-purple-600 text-[9px] font-bold text-white flex items-center justify-center shadow-xs">🥊</span>`;
+        }
+
         state.users.forEach(u => {
           if (ui.selectedUserFilter !== 'all' && ui.selectedUserFilter !== u.id) return;
           const st = dayShifts[u.id];
@@ -560,12 +582,15 @@
       }
     }
 
-    // Чисте модальне вікно з випадаючим меню для зміни статусу
     function openDayModal(dateKey) {
       ui.activeDayModal = dateKey;
       document.getElementById('modal-day-title').textContent = `Дата: ${dateKey.split('-').reverse().join('.')}`;
-      const dayShifts = state.shifts[dateKey] || {};
+      
+      // Чекбокс боксу
+      const boxToggle = document.getElementById('modal-box-toggle');
+      boxToggle.checked = !!state.boxing[dateKey];
 
+      const dayShifts = state.shifts[dateKey] || {};
       document.getElementById('modal-users-shifts').innerHTML = state.users.map(u => {
         const cur = dayShifts[u.id] || '';
         return `
@@ -590,6 +615,20 @@
         : events.map(e => `<div class="text-xs p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex justify-between items-center"><span>${e.time ? `<b>${e.time}</b> ` : ''}${e.title}</span></div>`).join('');
 
       document.getElementById('day-modal').classList.remove('hidden');
+    }
+
+    function toggleBoxTraining() {
+      const dateKey = ui.activeDayModal;
+      if (!dateKey) return;
+      const isChecked = document.getElementById('modal-box-toggle').checked;
+      if (isChecked) {
+        state.boxing[dateKey] = true;
+      } else {
+        delete state.boxing[dateKey];
+      }
+      saveState();
+      renderCalendar();
+      renderHeaderWidget();
     }
 
     function onModalShiftChange(dateKey, userId, status) {
@@ -800,6 +839,7 @@
     }
 
     function addNewUser(ev) {
+      ev.dirname = '';
       ev.preventDefault();
       const name = document.getElementById('new-user-name').value.trim();
       const color = document.getElementById('new-user-color').value;
