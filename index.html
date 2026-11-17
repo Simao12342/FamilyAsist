@@ -42,16 +42,27 @@
     <!-- Контент вкладок -->
     <main class="flex-1 p-3.5 space-y-4">
       
-      <!-- ВКЛАДКА 0: ГОЛОВНА (ТИTУЛЬНА) СТОРІНКА -->
+      <!-- ГОЛОВНА СТОРІНКА -->
       <section id="tab-home" class="space-y-4">
-        <!-- Вітання та статус змін на сьогодні -->
+        <!-- Сьогодні -->
         <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-4 text-white shadow-lg space-y-3">
           <div class="flex justify-between items-start">
             <div>
               <span id="home-date-str" class="text-xs uppercase tracking-wider text-blue-200 font-medium">Сьогодні</span>
               <h2 id="home-today-shifts" class="text-base font-bold leading-tight mt-0.5">Завантаження...</h2>
             </div>
-            <span class="px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold backdrop-blur-md">Головна</span>
+            <span class="px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold backdrop-blur-md">Сьогодні</span>
+          </div>
+        </div>
+
+        <!-- Завтра (Зміни + План) -->
+        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-4 text-white shadow-lg space-y-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <span id="home-tomorrow-date-str" class="text-xs uppercase tracking-wider text-indigo-200 font-medium">Завтра</span>
+              <h2 id="home-tomorrow-shifts" class="text-base font-bold leading-tight mt-0.5">Завантаження...</h2>
+            </div>
+            <span class="px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold backdrop-blur-md">Завтра</span>
           </div>
         </div>
 
@@ -59,9 +70,9 @@
         <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
             <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-blue-600"></span> План на сьогодні
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span> Справи на сьогодні
             </h3>
-            <button onclick="switchTab('planner')" class="text-xs font-semibold text-blue-600 hover:underline">Відкрити планер →</button>
+            <button onclick="switchTab('planner')" class="text-xs font-semibold text-blue-600 hover:underline">Планер →</button>
           </div>
           <div id="home-today-events" class="space-y-2"></div>
         </div>
@@ -70,7 +81,7 @@
         <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
             <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-indigo-500"></span> План на завтра
+              <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Справи на завтра
             </h3>
           </div>
           <div id="home-tomorrow-events" class="space-y-2"></div>
@@ -88,30 +99,23 @@
         </div>
       </section>
 
-      <!-- ВКЛАДКА 1: КАЛЕНДАР / ГРАФІК ЗМІН -->
+      <!-- КАЛЕНДАР -->
       <section id="tab-shifts" class="hidden space-y-3.5">
         <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
           <div class="flex justify-between items-center mb-2">
             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Члени сім'ї (фільтр)</span>
-            <button onclick="openUsersModal()" class="text-xs font-semibold text-blue-600 hover:underline">
-              + Налаштувати
-            </button>
+            <button onclick="openUsersModal()" class="text-xs font-semibold text-blue-600 hover:underline">+ Налаштувати</button>
           </div>
           <div id="user-filters" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
         </div>
 
         <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100">
           <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl">
-            <button id="mode-view-btn" onclick="setCalendarMode('view')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm">
-              👁️ Перегляд дня
-            </button>
-            <button id="mode-stamp-btn" onclick="setCalendarMode('stamp')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-600">
-              ⚡ Швидкий штамп
-            </button>
+            <button id="mode-view-btn" onclick="setCalendarMode('view')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm">👁️ Перегляд дня</button>
+            <button id="mode-stamp-btn" onclick="setCalendarMode('stamp')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-600">⚡ Швидкий штамп</button>
           </div>
-
           <div id="stamp-controls" class="hidden mt-3 pt-2.5 border-t border-slate-100 space-y-2.5">
-            <p class="text-[11px] text-slate-500 font-medium">Обери людину та статус, а потім просто натискай на числа в календарі:</p>
+            <p class="text-[11px] text-slate-500 font-medium">Обери людину та статус для проклацування:</p>
             <div id="stamp-users" class="flex gap-1.5 overflow-x-auto no-scrollbar"></div>
             <div id="stamp-statuses" class="grid grid-cols-4 gap-1.5"></div>
           </div>
@@ -120,34 +124,21 @@
         <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100">
           <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
             <div class="flex items-center gap-1">
-              <button onclick="changeMonth(-1)" title="Попередній місяць" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 active:scale-95">‹</button>
-              <select id="month-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-slate-800 focus:outline-none"></select>
-              <select id="year-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-blue-600 focus:outline-none"></select>
-              <button onclick="changeMonth(1)" title="Наступний місяць" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 active:scale-95">›</button>
+              <button onclick="changeMonth(-1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700">‹</button>
+              <select id="month-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm"></select>
+              <select id="year-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-blue-600"></select>
+              <button onclick="changeMonth(1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700">›</button>
             </div>
-            <button onclick="goToToday()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 active:scale-95">
-              Сьогодні
-            </button>
+            <button onclick="goToToday()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600">Сьогодні</button>
           </div>
-
           <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 mb-1.5">
-            <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div>
-            <div class="text-rose-500">Сб</div><div class="text-rose-500">Нд</div>
+            <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div class="text-rose-500">Сб</div><div class="text-rose-500">Нд</div>
           </div>
-
           <div id="calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
-
-          <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap gap-3 justify-center text-[11px] text-slate-500">
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-800 inline-block"></span> Робота</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full border-2 border-slate-500 inline-block"></span> Вихідний</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-amber-500 inline-block"></span> Чергування</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Відпустка</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 inline-block"></span> 🥊 Бокс</span>
-          </div>
         </div>
       </section>
 
-      <!-- ВКЛАДКА 2: ПЛАНЕР ПОДІЙ -->
+      <!-- ПЛАНЕР -->
       <section id="tab-planner" class="hidden space-y-3.5">
         <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center gap-2">
@@ -157,9 +148,8 @@
               <button id="plan-filter-all" onclick="setPlannerFilter('all')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600">Усі</button>
             </div>
           </div>
-
           <form onsubmit="addEvent(event)" class="space-y-2.5 pt-2 border-t border-slate-100">
-            <input type="text" id="event-title" required placeholder="Що потрібно зробити?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-500">
+            <input type="text" id="event-title" required placeholder="Що потрібно зробити?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm">
             <div class="grid grid-cols-3 gap-2">
               <input type="time" id="event-time" class="px-2.5 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50">
               <select id="event-user" class="px-2.5 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50"></select>
@@ -168,65 +158,52 @@
                 <option value="high">❗ Важливо</option>
               </select>
             </div>
-            <input type="text" id="event-note" placeholder="Коротка нотатка (необов'язково)" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-500">
-            <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm active:scale-95 transition">
-              + Додати подію
-            </button>
+            <input type="text" id="event-note" placeholder="Коротка нотатка" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+            <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-xl text-sm">+ Додати подію</button>
           </form>
         </div>
-
         <div id="events-list" class="space-y-2"></div>
       </section>
 
-      <!-- ВКЛАДКА 3: ПОКУПКИ -->
+      <!-- ПОКУПКИ -->
       <section id="tab-shopping" class="hidden space-y-3.5">
         <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 space-y-3">
           <form onsubmit="addShoppingItem(event)" class="space-y-2.5">
             <div class="flex gap-2">
-              <input type="text" id="shop-title" required placeholder="Що купити? (напр. Молоко)" class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-500">
-              <input type="text" id="shop-qty" placeholder="К-сть" class="w-20 px-2.5 py-2.5 rounded-xl border border-slate-200 text-sm text-center focus:outline-none focus:border-blue-500">
+              <input type="text" id="shop-title" required placeholder="Що купити?" class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm">
+              <input type="text" id="shop-qty" placeholder="К-сть" class="w-20 px-2.5 py-2.5 rounded-xl border border-slate-200 text-sm text-center">
             </div>
             <div id="shop-cat-selector" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
-            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm active:scale-95 transition">
-              🛒 Додати в список
-            </button>
+            <button type="submit" class="w-full py-2.5 bg-emerald-600 text-white font-semibold rounded-xl text-sm">🛒 Додати в список</button>
           </form>
         </div>
-
         <div class="flex justify-between items-center px-1">
           <span id="shop-counter" class="text-xs font-bold text-slate-500"></span>
-          <button onclick="clearBoughtItems()" class="text-xs font-semibold text-rose-600 hover:underline">
-            🗑️ Очистити куплене
-          </button>
+          <button onclick="clearBoughtItems()" class="text-xs font-semibold text-rose-600 hover:underline">🗑️ Очистити куплене</button>
         </div>
-
         <div id="shop-filter-tabs" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
         <div id="shopping-list" class="space-y-2.5"></div>
       </section>
 
     </main>
 
-    <!-- Нижня навігація з 4 кнопками -->
+    <!-- Нижня навігація -->
     <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-slate-200 grid grid-cols-4 py-2 px-2 z-30 shadow-lg">
       <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 rounded-xl text-blue-600 font-bold">
-        <span class="text-base">🏠</span>
-        <span class="text-[11px]">Головна</span>
+        <span class="text-base">🏠</span><span class="text-[11px]">Головна</span>
       </button>
       <button onclick="switchTab('shifts')" id="nav-shifts" class="flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium">
-        <span class="text-base">📅</span>
-        <span class="text-[11px]">Календар</span>
+        <span class="text-base">📅</span><span class="text-[11px]">Календар</span>
       </button>
       <button onclick="switchTab('planner')" id="nav-planner" class="flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium">
-        <span class="text-base">📝</span>
-        <span class="text-[11px]">Планер</span>
+        <span class="text-base">📝</span><span class="text-[11px]">Планер</span>
       </button>
       <button onclick="switchTab('shopping')" id="nav-shopping" class="flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium">
-        <span class="text-base">🛒</span>
-        <span class="text-[11px]">Покупки</span>
+        <span class="text-base">🛒</span><span class="text-[11px]">Покупки</span>
       </button>
     </nav>
 
-    <!-- Оновлене модальне вікно дня -->
+    <!-- Модальне вікно дня -->
     <div id="day-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
       <div class="bg-white w-full max-w-[480px] rounded-t-3xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -234,9 +211,8 @@
             <h3 id="modal-day-title" class="font-bold text-base text-slate-900"></h3>
             <p class="text-xs text-slate-500">Інформація та тренування на день</p>
           </div>
-          <button onclick="closeDayModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+          <button onclick="closeDayModal()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button>
         </div>
-        
         <div class="bg-purple-50 border border-purple-200 p-3 rounded-2xl flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="text-lg">🥊</span>
@@ -247,12 +223,10 @@
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="modal-box-toggle" onchange="toggleBoxTraining()" class="sr-only peer">
-            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            <div class="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
           </label>
         </div>
-
         <div id="modal-users-shifts" class="space-y-2"></div>
-
         <div class="pt-2 border-t border-slate-100">
           <div class="flex justify-between items-center mb-2">
             <h4 class="text-xs font-bold uppercase text-slate-400">Події та справи</h4>
@@ -263,7 +237,7 @@
       </div>
     </div>
 
-    <!-- Модальне вікно налаштувань сім'ї -->
+    <!-- Модальне вікно членів сім'ї -->
     <div id="users-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-[420px] rounded-3xl p-4 space-y-4">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -272,14 +246,14 @@
         </div>
         <div id="users-manage-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
         <form onsubmit="addNewUser(event)" class="flex gap-2 pt-2 border-t border-slate-100">
-          <input type="text" id="new-user-name" required placeholder="Ім'я (напр. Бабуся)" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm">
+          <input type="text" id="new-user-name" required placeholder="Ім'я" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm">
           <input type="color" id="new-user-color" value="#8b5cf6" class="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer">
           <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold">Додати</button>
         </form>
       </div>
     </div>
 
-    <!-- Модальне вікно хмарного підключення -->
+    <!-- Модальне вікно бекапу -->
     <div id="backup-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-[420px] rounded-3xl p-4 space-y-4">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -287,7 +261,6 @@
           <button onclick="closeBackupModal()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button>
         </div>
         <p class="text-xs text-slate-600 leading-relaxed">Введіть однаковий **Код хмари** на своєму телефоні та телефоні Олі:</p>
-        
         <div class="space-y-2">
           <label class="text-[11px] font-bold text-slate-500 uppercase">Спільний код хмари:</label>
           <div class="flex gap-2">
@@ -295,7 +268,6 @@
             <button onclick="saveCloudRoom()" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold">Підключити</button>
           </div>
         </div>
-
         <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
           <button onclick="forceSyncNow()" class="text-xs text-blue-600 font-semibold hover:underline">🔄 Оновити дані</button>
           <button onclick="resetAllData()" class="text-xs text-rose-600 font-semibold hover:underline">Очистити все</button>
@@ -329,7 +301,7 @@
     };
 
     let ui = {
-      currentTab: 'home', // За замовчуванням відкривається головна сторінка
+      currentTab: 'home',
       currentYear: new Date().getFullYear(),
       currentMonth: new Date().getMonth(),
       selectedUserFilter: 'all',
@@ -362,14 +334,14 @@
     async function loadState() {
       document.getElementById('sync-room-input').value = cloudRoom;
       try {
-        const local = localStorage.getItem('family_assistant_v5_' + cloudRoom);
+        const local = localStorage.getItem('family_assistant_v6_' + cloudRoom);
         if (local) {
           state = JSON.parse(local);
         } else {
           seedInitialData();
         }
       } catch (e) {
-        const local = localStorage.getItem('family_assistant_v5_' + cloudRoom);
+        const local = localStorage.getItem('family_assistant_v6_' + cloudRoom);
         if (local) state = JSON.parse(local);
         else seedInitialData();
       }
@@ -378,13 +350,13 @@
     }
 
     async function saveState() {
-      localStorage.setItem('family_assistant_v5_' + cloudRoom, JSON.stringify(state));
+      localStorage.setItem('family_assistant_v6_' + cloudRoom, JSON.stringify(state));
       document.getElementById('sync-status').textContent = '● Збережено';
       document.getElementById('sync-status').className = 'text-[11px] text-emerald-600 font-medium';
     }
 
     async function silentSync() {
-      const local = localStorage.getItem('family_assistant_v5_' + cloudRoom);
+      const local = localStorage.getItem('family_assistant_v6_' + cloudRoom);
       if (local) {
         const parsed = JSON.parse(local);
         if (JSON.stringify(parsed) !== JSON.stringify(state)) {
@@ -466,22 +438,34 @@
       renderAll();
     }
 
-    // Рендер головної сторінки
+    // Рендер головної сторінки з робочим графіком на сьогодні та завтра
     function renderHomeDashboard() {
       const todayKey = getTodayKey();
       const tomorrowKey = getTomorrowKey();
 
-      // Дата у шапці
+      // Дати у шапках
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
       document.getElementById('home-date-str').textContent = new Date().toLocaleDateString('uk-UA', options);
+      
+      const tomDate = new Date();
+      tomDate.setDate(tomDate.getDate() + 1);
+      document.getElementById('home-tomorrow-date-str').textContent = tomDate.toLocaleDateString('uk-UA', options);
 
-      // Звірки на сьогодні
-      const dayShifts = state.shifts[todayKey] || {};
-      const workingNow = state.users.filter(u => dayShifts[u.id] === 'work').map(u => u.name);
-      const hasBox = state.boxing[todayKey];
-      let todayText = workingNow.length > 0 ? `Робота: ${workingNow.join(', ')}` : 'Сьогодні всі вільні';
-      if (hasBox) todayText += ' | 🥊 Бокс';
+      // Зміни на сьогодні
+      const todayShifts = state.shifts[todayKey] || {};
+      const workingToday = state.users.filter(u => todayShifts[u.id] === 'work').map(u => u.name);
+      const hasBoxToday = state.boxing[todayKey];
+      let todayText = workingToday.length > 0 ? `Робота: ${workingToday.join(', ')}` : 'Сьогодні всі вільні';
+      if (hasBoxToday) todayText += ' | 🥊 Бокс';
       document.getElementById('home-today-shifts').textContent = todayText;
+
+      // Зміни на завтра
+      const tomShifts = state.shifts[tomorrowKey] || {};
+      const workingTom = state.users.filter(u => tomShifts[u.id] === 'work').map(u => u.name);
+      const hasBoxTom = state.boxing[tomorrowKey];
+      let tomText = workingTom.length > 0 ? `Робота: ${workingTom.join(', ')}` : 'Завтра всі вільні 🎉';
+      if (hasBoxTom) tomText += ' | 🥊 Бокс';
+      document.getElementById('home-tomorrow-shifts').textContent = tomText;
 
       // Події на сьогодні
       const todayEvents = state.events.filter(e => e.date === todayKey);
@@ -524,7 +508,7 @@
       }
 
       // Активні покупки
-      const activeShop = state.shopping.filter(i => !i.bought).slice(0, 5); // Показуємо перші 5
+      const activeShop = state.shopping.filter(i => !i.bought).slice(0, 5);
       const shopContainer = document.getElementById('home-shopping-list');
       if (activeShop.length === 0) {
         shopContainer.innerHTML = `<p class="text-xs text-slate-400 py-1">Список покупок порожній 👍</p>`;
