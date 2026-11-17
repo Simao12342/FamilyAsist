@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <!-- Завтра (Зміни + План) -->
+        <!-- Завтра -->
         <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-4 text-white shadow-lg space-y-3">
           <div class="flex justify-between items-start">
             <div>
@@ -334,6 +334,7 @@
     async function loadState() {
       document.getElementById('sync-room-input').value = cloudRoom;
       try {
+        // Використовуємо стабільний постійний ключ сховища v6, щоб дані не затиралися
         const local = localStorage.getItem('family_assistant_v6_' + cloudRoom);
         if (local) {
           state = JSON.parse(local);
@@ -438,12 +439,10 @@
       renderAll();
     }
 
-    // Рендер головної сторінки з робочим графіком на сьогодні та завтра
     function renderHomeDashboard() {
       const todayKey = getTodayKey();
       const tomorrowKey = getTomorrowKey();
 
-      // Дати у шапках
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
       document.getElementById('home-date-str').textContent = new Date().toLocaleDateString('uk-UA', options);
       
@@ -451,7 +450,6 @@
       tomDate.setDate(tomDate.getDate() + 1);
       document.getElementById('home-tomorrow-date-str').textContent = tomDate.toLocaleDateString('uk-UA', options);
 
-      // Зміни на сьогодні
       const todayShifts = state.shifts[todayKey] || {};
       const workingToday = state.users.filter(u => todayShifts[u.id] === 'work').map(u => u.name);
       const hasBoxToday = state.boxing[todayKey];
@@ -459,7 +457,6 @@
       if (hasBoxToday) todayText += ' | 🥊 Бокс';
       document.getElementById('home-today-shifts').textContent = todayText;
 
-      // Зміни на завтра
       const tomShifts = state.shifts[tomorrowKey] || {};
       const workingTom = state.users.filter(u => tomShifts[u.id] === 'work').map(u => u.name);
       const hasBoxTom = state.boxing[tomorrowKey];
@@ -467,7 +464,6 @@
       if (hasBoxTom) tomText += ' | 🥊 Бокс';
       document.getElementById('home-tomorrow-shifts').textContent = tomText;
 
-      // Події на сьогодні
       const todayEvents = state.events.filter(e => e.date === todayKey);
       const todayEvContainer = document.getElementById('home-today-events');
       if (todayEvents.length === 0) {
@@ -487,7 +483,6 @@
         }).join('');
       }
 
-      // Події на завтра
       const tomorrowEvents = state.events.filter(e => e.date === tomorrowKey);
       const tomEvContainer = document.getElementById('home-tomorrow-events');
       if (tomorrowEvents.length === 0) {
@@ -507,7 +502,6 @@
         }).join('');
       }
 
-      // Активні покупки
       const activeShop = state.shopping.filter(i => !i.bought).slice(0, 5);
       const shopContainer = document.getElementById('home-shopping-list');
       if (activeShop.length === 0) {
