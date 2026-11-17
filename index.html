@@ -7,9 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body {
@@ -28,16 +26,16 @@
     <!-- Шапка -->
     <header class="bg-white px-4 py-3.5 border-b border-slate-200 sticky top-0 z-30 flex justify-between items-center shadow-sm">
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
-          <i data-lucide="calendar-heart" class="w-5 h-5"></i>
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white text-lg shadow-sm">
+          📅
         </div>
         <div>
           <h1 class="font-bold text-base leading-tight text-slate-900">Сімейний помічник</h1>
           <p class="text-[11px] text-slate-500 font-medium">Зміни • Планер • Покупки</p>
         </div>
       </div>
-      <button onclick="openBackupModal()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 transition">
-        <i data-lucide="settings" class="w-5 h-5"></i>
+      <button onclick="openBackupModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold active:scale-95 transition">
+        ⚙️ Дані
       </button>
     </header>
 
@@ -51,8 +49,8 @@
         <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
           <div class="flex justify-between items-center mb-2">
             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Члени сім'ї (фільтр)</span>
-            <button onclick="openUsersModal()" class="text-xs font-semibold text-blue-600 flex items-center gap-1 hover:underline">
-              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Налаштувати
+            <button onclick="openUsersModal()" class="text-xs font-semibold text-blue-600 hover:underline">
+              + Налаштувати
             </button>
           </div>
           <div id="user-filters" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
@@ -62,10 +60,10 @@
         <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100">
           <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl">
             <button id="mode-view-btn" onclick="setCalendarMode('view')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm">
-              <i data-lucide="eye" class="w-4 h-4"></i> Деталі дня
+              👁️ Деталі дня
             </button>
             <button id="mode-stamp-btn" onclick="setCalendarMode('stamp')" class="py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-600">
-              <i data-lucide="zap" class="w-4 h-4"></i> Швидкий штамп
+              ⚡ Швидкий штамп
             </button>
           </div>
 
@@ -79,16 +77,18 @@
 
         <!-- Календар -->
         <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100">
-          <div class="flex justify-between items-center mb-3">
+          <!-- Навігація по місяцях і роках -->
+          <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
             <div class="flex items-center gap-1">
-              <button onclick="changeMonth(-1)" class="p-2 rounded-xl hover:bg-slate-100 active:scale-95">
-                <i data-lucide="chevron-left" class="w-5 h-5"></i>
-              </button>
-              <h2 id="calendar-month-title" class="font-bold text-base min-w-[130px] text-center capitalize"></h2>
-              <button onclick="changeMonth(1)" class="p-2 rounded-xl hover:bg-slate-100 active:scale-95">
-                <i data-lucide="chevron-right" class="w-5 h-5"></i>
-              </button>
+              <button onclick="changeMonth(-1)" title="Попередній місяць" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 active:scale-95">‹</button>
+              
+              <select id="month-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-slate-800 focus:outline-none"></select>
+              
+              <select id="year-select" onchange="onMonthYearSelect()" class="px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-blue-600 focus:outline-none"></select>
+
+              <button onclick="changeMonth(1)" title="Наступний місяць" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 active:scale-95">›</button>
             </div>
+
             <button onclick="goToToday()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 active:scale-95">
               Сьогодні
             </button>
@@ -97,7 +97,7 @@
           <!-- Дні тижня -->
           <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 mb-1.5">
             <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div>
-            <div class="text-rose-400">Сб</div><div class="text-rose-400">Нд</div>
+            <div class="text-rose-500">Сб</div><div class="text-rose-500">Нд</div>
           </div>
 
           <!-- Сітка днів -->
@@ -124,7 +124,6 @@
             </div>
           </div>
 
-          <!-- Форма додавання події -->
           <form onsubmit="addEvent(event)" class="space-y-2.5 pt-2 border-t border-slate-100">
             <input type="text" id="event-title" required placeholder="Що потрібно зробити?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-500">
             <div class="grid grid-cols-3 gap-2">
@@ -136,8 +135,8 @@
               </select>
             </div>
             <input type="text" id="event-note" placeholder="Коротка нотатка (необов'язково)" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-500">
-            <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm active:scale-98 transition flex items-center justify-center gap-1.5">
-              <i data-lucide="plus-circle" class="w-4 h-4"></i> Додати подію
+            <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm active:scale-95 transition">
+              + Додати подію
             </button>
           </form>
         </div>
@@ -154,40 +153,643 @@
               <input type="text" id="shop-qty" placeholder="К-сть" class="w-20 px-2.5 py-2.5 rounded-xl border border-slate-200 text-sm text-center focus:outline-none focus:border-blue-500">
             </div>
             <div id="shop-cat-selector" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
-            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm active:scale-98 transition flex items-center justify-center gap-1.5">
-              <i data-lucide="shopping-bag" class="w-4 h-4"></i> Додати в список
+            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm active:scale-95 transition">
+              🛒 Додати в список
             </button>
           </form>
         </div>
 
         <div class="flex justify-between items-center px-1">
           <span id="shop-counter" class="text-xs font-bold text-slate-500"></span>
-          <button onclick="clearBoughtItems()" class="text-xs font-semibold text-rose-600 hover:underline flex items-center gap-1">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Очистити куплене
+          <button onclick="clearBoughtItems()" class="text-xs font-semibold text-rose-600 hover:underline">
+            🗑️ Очистити куплене
           </button>
         </div>
 
         <div id="shop-filter-tabs" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
-        <div id="shopping-list" class="space-y-3"></div>
+        <div id="shopping-list" class="space-y-2.5"></div>
       </section>
 
     </main>
 
     <!-- Нижня навігація -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-slate-200 grid grid-cols-3 py-1.5 px-2 z-30 shadow-lg">
-      <button onclick="switchTab('shifts')" id="nav-shifts" class="flex flex-col items-center py-1.5 rounded-xl text-blue-600 font-semibold">
-        <i data-lucide="calendar" class="w-5 h-5 mb-0.5"></i>
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-slate-200 grid grid-cols-3 py-2 px-2 z-30 shadow-lg">
+      <button onclick="switchTab('shifts')" id="nav-shifts" class="flex flex-col items-center py-1 rounded-xl text-blue-600 font-bold">
+        <span class="text-base">📅</span>
         <span class="text-[11px]">Графік змін</span>
       </button>
-      <button onclick="switchTab('planner')" id="nav-planner" class="flex flex-col items-center py-1.5 rounded-xl text-slate-400 font-medium">
-        <i data-lucide="check-square" class="w-5 h-5 mb-0.5"></i>
+      <button onclick="switchTab('planner')" id="nav-planner" class="flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium">
+        <span class="text-base">📝</span>
         <span class="text-[11px]">Планер</span>
       </button>
-      <button onclick="switchTab('shopping')" id="nav-shopping" class="flex flex-col items-center py-1.5 rounded-xl text-slate-400 font-medium">
-        <i data-lucide="shopping-cart" class="w-5 h-5 mb-0.5"></i>
+      <button onclick="switchTab('shopping')" id="nav-shopping" class="flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium">
+        <span class="text-base">🛒</span>
         <span class="text-[11px]">Покупки</span>
       </button>
     </nav>
 
     <!-- Модальне вікно деталей дня -->
-    <div id="day-modal" class="fixed inset-0 bg-black/5
+    <div id="day-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
+      <div class="bg-white w-full max-w-[480px] rounded-t-3xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <div>
+            <h3 id="modal-day-title" class="font-bold text-base text-slate-900"></h3>
+            <p class="text-xs text-slate-500">Статуси змін та справи на день</p>
+          </div>
+          <button onclick="closeDayModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold">✕</button>
+        </div>
+        <div id="modal-users-shifts" class="space-y-2.5"></div>
+        <div class="pt-2 border-t border-slate-100">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-xs font-bold uppercase text-slate-400">Події на цей день</h4>
+            <button onclick="goToPlannerFromModal()" class="text-xs font-semibold text-blue-600">+ Додати справу</button>
+          </div>
+          <div id="modal-day-events" class="space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальне вікно редагування членів сім'ї -->
+    <div id="users-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-[420px] rounded-3xl p-4 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h3 class="font-bold text-base">Члени сім'ї</h3>
+          <button onclick="closeUsersModal()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button>
+        </div>
+        <div id="users-manage-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+        <form onsubmit="addNewUser(event)" class="flex gap-2 pt-2 border-t border-slate-100">
+          <input type="text" id="new-user-name" required placeholder="Ім'я (напр. Бабуся)" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm">
+          <input type="color" id="new-user-color" value="#8b5cf6" class="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer">
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold">Додати</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Модальне вікно Бекапу та Налаштувань -->
+    <div id="backup-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-[420px] rounded-3xl p-4 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h3 class="font-bold text-base">Обмін даними та Бекап</h3>
+          <button onclick="closeBackupModal()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">Скопіюй код даних і перешли у Telegram/Viber дружині, щоб оновити графік на іншому телефоні:</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="exportDataClipboard()" class="py-2.5 px-3 bg-blue-600 text-white rounded-xl text-xs font-semibold">
+            📋 Скопіювати код
+          </button>
+          <button onclick="downloadBackupFile()" class="py-2.5 px-3 bg-slate-800 text-white rounded-xl text-xs font-semibold">
+            💾 Скачати файл
+          </button>
+        </div>
+        <div class="space-y-2 pt-2 border-t border-slate-100">
+          <textarea id="import-json-area" rows="3" placeholder="Встав сюди скопійований код від іншого члена сім'ї..." class="w-full p-2.5 rounded-xl border border-slate-200 text-xs"></textarea>
+          <button onclick="importDataFromText()" class="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold">Завантажити вставлений графік</button>
+        </div>
+        <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
+          <button onclick="resetAllData()" class="text-xs text-rose-600 font-semibold hover:underline">Очистити всі дані</button>
+          <span class="text-[11px] text-slate-400">Автозбереження активне</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'family_assistant_v2';
+    const MONTH_NAMES = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+    const SHIFT_TYPES = [
+      { id: 'work', label: 'Робота' },
+      { id: 'off', label: 'Вихідний' },
+      { id: 'half', label: 'Чергування' },
+      { id: 'vacation', label: 'Відпустка' }
+    ];
+    const SHOP_CATEGORIES = ['Продукти', 'Дім і побут', 'Дитяче', 'Авто / Інструменти', 'Аптека / Інше'];
+
+    let state = {
+      users: [
+        { id: 'u1', name: 'Сергій', color: '#2563eb' },
+        { id: 'u2', name: 'Оля', color: '#db2777' },
+        { id: 'u3', name: 'Мама', color: '#16a34a' },
+        { id: 'u4', name: 'Тато', color: '#ea580c' }
+      ],
+      shifts: {},
+      events: [],
+      shopping: []
+    };
+
+    let ui = {
+      currentTab: 'shifts',
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth(),
+      selectedUserFilter: 'all',
+      calendarMode: 'view',
+      stampUser: 'u1',
+      stampStatus: 'work',
+      activeDayModal: null,
+      plannerFilter: 'day',
+      selectedShopCategory: 'Продукти',
+      shopFilterCategory: 'all'
+    };
+
+    function formatDateKey(year, month, day) {
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    function getTodayKey() {
+      const now = new Date();
+      return formatDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try { state = JSON.parse(saved); } catch (e) { seedInitialData(); }
+      } else {
+        seedInitialData();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function seedInitialData() {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = today.getMonth();
+      const d = today.getDate();
+
+      const k1 = formatDateKey(y, m, d);
+      const k2 = formatDateKey(y, m, Math.min(28, d + 1));
+
+      state.shifts[k1] = { u1: 'work', u2: 'off', u3: 'off', u4: 'work' };
+      state.shifts[k2] = { u1: 'off', u2: 'work', u3: 'work', u4: 'off' };
+
+      state.events = [
+        { id: 'e1', date: k1, time: '10:00', title: 'Забрати посилку з пошти', user: 'u1', priority: 'normal', note: '', done: false },
+        { id: 'e2', date: k1, time: '17:00', title: 'Сімейні справи / садок', user: 'u2', priority: 'high', note: '', done: false }
+      ];
+
+      state.shopping = [
+        { id: 's1', title: 'Молоко та хліб', qty: '2 шт', category: 'Продукти', bought: false },
+        { id: 's2', title: 'Вологі серветки', qty: '1 уп', category: 'Дитяче', bought: false },
+        { id: 's3', title: 'Омивач скла', qty: '4 л', category: 'Авто / Інструменти', bought: true }
+      ];
+      saveState();
+    }
+
+    function initMonthYearSelectors() {
+      const mSelect = document.getElementById('month-select');
+      mSelect.innerHTML = MONTH_NAMES.map((name, idx) => `<option value="${idx}">${name}</option>`).join('');
+
+      const ySelect = document.getElementById('year-select');
+      let yearsHtml = '';
+      for (let y = 2024; y <= 2036; y++) {
+        yearsHtml += `<option value="${y}">${y} рік</option>`;
+      }
+      ySelect.innerHTML = yearsHtml;
+    }
+
+    function onMonthYearSelect() {
+      ui.currentMonth = parseInt(document.getElementById('month-select').value, 10);
+      ui.currentYear = parseInt(document.getElementById('year-select').value, 10);
+      renderCalendar();
+    }
+
+    function switchTab(tab) {
+      ui.currentTab = tab;
+      ['shifts', 'planner', 'shopping'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`nav-${t}`);
+        btn.className = t === tab
+          ? 'flex flex-col items-center py-1 rounded-xl text-blue-600 font-bold'
+          : 'flex flex-col items-center py-1 rounded-xl text-slate-400 font-medium';
+      });
+      renderAll();
+    }
+
+    function renderUserFilters() {
+      const container = document.getElementById('user-filters');
+      let html = `<button onclick="setUserFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${ui.selectedUserFilter === 'all' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'}">Усі</button>`;
+      state.users.forEach(u => {
+        const active = ui.selectedUserFilter === u.id;
+        html += `<button onclick="setUserFilter('${u.id}')" style="${active ? `background-color:${u.color};color:white` : ''}" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition ${active ? '' : 'bg-slate-100 text-slate-700'}">
+          <span class="w-2.5 h-2.5 rounded-full" style="background-color:${active ? '#fff' : u.color}"></span>${u.name}
+        </button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function setUserFilter(uid) {
+      ui.selectedUserFilter = uid;
+      renderUserFilters();
+      renderCalendar();
+    }
+
+    function setCalendarMode(mode) {
+      ui.calendarMode = mode;
+      document.getElementById('mode-view-btn').className = mode === 'view'
+        ? 'py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm'
+        : 'py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-600';
+      document.getElementById('mode-stamp-btn').className = mode === 'stamp'
+        ? 'py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-blue-600 text-white shadow-sm'
+        : 'py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-600';
+      document.getElementById('stamp-controls').classList.toggle('hidden', mode !== 'stamp');
+      renderStampControls();
+    }
+
+    function renderStampControls() {
+      if (ui.calendarMode !== 'stamp') return;
+      document.getElementById('stamp-users').innerHTML = state.users.map(u => {
+        const active = ui.stampUser === u.id;
+        return `<button onclick="ui.stampUser='${u.id}';renderStampControls()" style="${active ? `background:${u.color};color:#fff` : ''}" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap ${active ? '' : 'bg-slate-100 text-slate-700'}">${u.name}</button>`;
+      }).join('');
+
+      document.getElementById('stamp-statuses').innerHTML = SHIFT_TYPES.map(s => {
+        const active = ui.stampStatus === s.id;
+        return `<button onclick="ui.stampStatus='${s.id}';renderStampControls()" class="py-1.5 px-2 rounded-xl text-[11px] font-semibold border ${active ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-700 border-slate-200'}">${s.label}</button>`;
+      }).join('');
+    }
+
+    function changeMonth(delta) {
+      ui.currentMonth += delta;
+      if (ui.currentMonth > 11) { ui.currentMonth = 0; ui.currentYear++; }
+      if (ui.currentMonth < 0) { ui.currentMonth = 11; ui.currentYear--; }
+      renderCalendar();
+    }
+
+    function goToToday() {
+      const now = new Date();
+      ui.currentYear = now.getFullYear();
+      ui.currentMonth = now.getMonth();
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('month-select').value = ui.currentMonth;
+      document.getElementById('year-select').value = ui.currentYear;
+
+      const firstDay = new Date(ui.currentYear, ui.currentMonth, 1).getDay();
+      const startOffset = (firstDay + 6) % 7;
+      const daysInMonth = new Date(ui.currentYear, ui.currentMonth + 1, 0).getDate();
+      const todayKey = getTodayKey();
+
+      const grid = document.getElementById('calendar-grid');
+      let html = '';
+
+      for (let i = 0; i < startOffset; i++) {
+        html += `<div class="h-16 rounded-xl bg-slate-100/50"></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = formatDateKey(ui.currentYear, ui.currentMonth, day);
+        const isToday = dateKey === todayKey;
+        const dayShifts = state.shifts[dateKey] || {};
+        const dayEvents = state.events.filter(e => e.date === dateKey && !e.done);
+
+        let badgesHtml = '';
+        state.users.forEach(u => {
+          if (ui.selectedUserFilter !== 'all' && ui.selectedUserFilter !== u.id) return;
+          const st = dayShifts[u.id];
+          if (!st) return;
+          const letter = u.name.charAt(0).toUpperCase();
+          if (st === 'work') {
+            badgesHtml += `<span style="background:${u.color}" class="w-4 h-4 rounded-full text-[9px] font-bold text-white flex items-center justify-center">${letter}</span>`;
+          } else if (st === 'off') {
+            badgesHtml += `<span style="border-color:${u.color};color:${u.color}" class="w-4 h-4 rounded-full border-2 text-[9px] font-bold flex items-center justify-center bg-white">${letter}</span>`;
+          } else if (st === 'half') {
+            badgesHtml += `<span class="w-4 h-4 rounded-sm bg-amber-500 text-[9px] font-bold text-white flex items-center justify-center">${letter}</span>`;
+          } else if (st === 'vacation') {
+            badgesHtml += `<span class="w-4 h-4 rounded-full bg-emerald-500 text-[9px] font-bold text-white flex items-center justify-center">${letter}</span>`;
+          }
+        });
+
+        html += `
+          <button onclick="onDayClick('${dateKey}')" class="h-16 p-1.5 rounded-xl border text-left flex flex-col justify-between transition active:scale-95 ${isToday ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-500' : 'border-slate-200 bg-white hover:border-slate-300'}">
+            <div class="flex justify-between items-start w-full">
+              <span class="text-xs font-bold ${isToday ? 'text-blue-600' : 'text-slate-700'}">${day}</span>
+              ${dayEvents.length > 0 ? `<span class="px-1 rounded bg-rose-100 text-rose-600 text-[9px] font-bold">${dayEvents.length}</span>` : ''}
+            </div>
+            <div class="flex flex-wrap gap-0.5">${badgesHtml}</div>
+          </button>
+        `;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function onDayClick(dateKey) {
+      if (ui.calendarMode === 'stamp') {
+        if (!state.shifts[dateKey]) state.shifts[dateKey] = {};
+        if (state.shifts[dateKey][ui.stampUser] === ui.stampStatus) {
+          delete state.shifts[dateKey][ui.stampUser];
+        } else {
+          state.shifts[dateKey][ui.stampUser] = ui.stampStatus;
+        }
+        saveState();
+        renderCalendar();
+      } else {
+        openDayModal(dateKey);
+      }
+    }
+
+    function openDayModal(dateKey) {
+      ui.activeDayModal = dateKey;
+      document.getElementById('modal-day-title').textContent = `Дата: ${dateKey.split('-').reverse().join('.')}`;
+      const dayShifts = state.shifts[dateKey] || {};
+
+      document.getElementById('modal-users-shifts').innerHTML = state.users.map(u => {
+        const cur = dayShifts[u.id] || '';
+        const btns = SHIFT_TYPES.map(st => {
+          const active = cur === st.id;
+          return `<button onclick="setUserDayShift('${dateKey}','${u.id}','${st.id}')" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold border ${active ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200'}">${st.label}</button>`;
+        }).join('');
+        return `
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:${u.color}"></span>${u.name}</span>
+              ${cur ? `<button onclick="setUserDayShift('${dateKey}','${u.id}','')" class="text-[11px] text-rose-500">Очистити</button>` : ''}
+            </div>
+            <div class="grid grid-cols-4 gap-1">${btns}</div>
+          </div>
+        `;
+      }).join('');
+
+      const events = state.events.filter(e => e.date === dateKey);
+      document.getElementById('modal-day-events').innerHTML = events.length === 0
+        ? `<p class="text-xs text-slate-400">На цей день подій немає.</p>`
+        : events.map(e => `<div class="text-xs p-2 rounded-xl bg-slate-50 flex justify-between"><span>${e.time ? `<b>${e.time}</b> ` : ''}${e.title}</span></div>`).join('');
+
+      document.getElementById('day-modal').classList.remove('hidden');
+    }
+
+    function setUserDayShift(dateKey, userId, status) {
+      if (!state.shifts[dateKey]) state.shifts[dateKey] = {};
+      if (!status) delete state.shifts[dateKey][userId];
+      else state.shifts[dateKey][userId] = status;
+      saveState();
+      openDayModal(dateKey);
+      renderCalendar();
+    }
+
+    function closeDayModal() {
+      document.getElementById('day-modal').classList.add('hidden');
+    }
+
+    function goToPlannerFromModal() {
+      const dateKey = ui.activeDayModal;
+      closeDayModal();
+      document.getElementById('planner-date').value = dateKey;
+      switchTab('planner');
+    }
+
+    function setPlannerFilter(f) {
+      ui.plannerFilter = f;
+      document.getElementById('plan-filter-day').className = f === 'day' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-white shadow-sm' : 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600';
+      document.getElementById('plan-filter-all').className = f === 'all' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-white shadow-sm' : 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600';
+      renderPlanner();
+    }
+
+    function renderPlanner() {
+      const dateInput = document.getElementById('planner-date');
+      if (!dateInput.value) dateInput.value = getTodayKey();
+
+      document.getElementById('event-user').innerHTML = `<option value="all">Для всіх</option>` + state.users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+      let list = [...state.events];
+      if (ui.plannerFilter === 'day') list = list.filter(e => e.date === dateInput.value);
+      list.sort((a, b) => Number(a.done) - Number(b.done) || a.date.localeCompare(b.date));
+
+      const container = document.getElementById('events-list');
+      if (list.length === 0) {
+        container.innerHTML = `<div class="bg-white p-6 rounded-2xl text-center text-xs text-slate-400">Справ на вибрану дату немає</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(e => {
+        const u = state.users.find(x => x.id === e.user);
+        return `
+          <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-start justify-between gap-2.5 ${e.done ? 'opacity-60' : ''}">
+            <label class="flex items-start gap-2.5 flex-1 cursor-pointer">
+              <input type="checkbox" ${e.done ? 'checked' : ''} onchange="toggleEventDone('${e.id}')" class="mt-1 w-4 h-4 rounded text-blue-600">
+              <div class="space-y-0.5">
+                <div class="text-sm font-semibold ${e.done ? 'line-through text-slate-400' : 'text-slate-800'}">
+                  ${e.priority === 'high' ? '<span class="text-rose-600">❗</span> ' : ''}${e.title}
+                </div>
+                <div class="text-[11px] text-slate-400 flex flex-wrap gap-2">
+                  <span>📅 ${e.date.split('-').reverse().join('.')}</span>
+                  ${e.time ? `<span>⏰ ${e.time}</span>` : ''}
+                  ${u ? `<span style="color:${u.color}" class="font-semibold">👤 ${u.name}</span>` : ''}
+                </div>
+                ${e.note ? `<p class="text-xs text-slate-500">${e.note}</p>` : ''}
+              </div>
+            </label>
+            <button onclick="deleteEvent('${e.id}')" class="text-slate-300 hover:text-rose-500 p-1">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addEvent(ev) {
+      ev.preventDefault();
+      const date = document.getElementById('planner-date').value || getTodayKey();
+      const title = document.getElementById('event-title').value.trim();
+      if (!title) return;
+      state.events.push({
+        id: 'ev_' + Date.now(),
+        date,
+        title,
+        time: document.getElementById('event-time').value,
+        user: document.getElementById('event-user').value,
+        priority: document.getElementById('event-priority').value,
+        note: document.getElementById('event-note').value.trim(),
+        done: false
+      });
+      document.getElementById('event-title').value = '';
+      document.getElementById('event-note').value = '';
+      saveState();
+      renderPlanner();
+      renderCalendar();
+    }
+
+    function toggleEventDone(id) {
+      const ev = state.events.find(x => x.id === id);
+      if (ev) ev.done = !ev.done;
+      saveState();
+      renderPlanner();
+      renderCalendar();
+    }
+
+    function deleteEvent(id) {
+      state.events = state.events.filter(x => x.id !== id);
+      saveState();
+      renderPlanner();
+      renderCalendar();
+    }
+
+    function renderShopping() {
+      document.getElementById('shop-cat-selector').innerHTML = SHOP_CATEGORIES.map(c => {
+        const active = ui.selectedShopCategory === c;
+        return `<button type="button" onclick="ui.selectedShopCategory='${c}';renderShopping()" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap ${active ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}">${c}</button>`;
+      }).join('');
+
+      document.getElementById('shop-filter-tabs').innerHTML = ['all', ...SHOP_CATEGORIES].map(c => {
+        const active = ui.shopFilterCategory === c;
+        const label = c === 'all' ? 'Усі категорії' : c;
+        return `<button onclick="ui.shopFilterCategory='${c}';renderShopping()" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap ${active ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-600'}">${label}</button>`;
+      }).join('');
+
+      const leftCount = state.shopping.filter(i => !i.bought).length;
+      document.getElementById('shop-counter').textContent = `Залишилось купити: ${leftCount} з ${state.shopping.length}`;
+
+      let items = [...state.shopping];
+      if (ui.shopFilterCategory !== 'all') items = items.filter(i => i.category === ui.shopFilterCategory);
+      items.sort((a, b) => Number(a.bought) - Number(b.bought));
+
+      const listEl = document.getElementById('shopping-list');
+      if (items.length === 0) {
+        listEl.innerHTML = `<div class="bg-white p-6 rounded-2xl text-center text-xs text-slate-400">Список покупок порожній</div>`;
+        return;
+      }
+
+      listEl.innerHTML = items.map(item => `
+        <div onclick="toggleShopItem('${item.id}')" class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer ${item.bought ? 'opacity-55' : ''}">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" ${item.bought ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600 pointer-events-none">
+            <div>
+              <p class="text-sm font-semibold ${item.bought ? 'line-through text-slate-400' : 'text-slate-800'}">${item.title} ${item.qty ? `<span class="text-xs font-normal text-slate-400">(${item.qty})</span>` : ''}</p>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-500">${item.category}</span>
+            </div>
+          </div>
+          <button onclick="event.stopPropagation();deleteShopItem('${item.id}')" class="text-slate-300 hover:text-rose-500 p-1">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function addShoppingItem(ev) {
+      ev.preventDefault();
+      const title = document.getElementById('shop-title').value.trim();
+      const qty = document.getElementById('shop-qty').value.trim();
+      if (!title) return;
+      state.shopping.unshift({
+        id: 'sh_' + Date.now(),
+        title,
+        qty,
+        category: ui.selectedShopCategory,
+        bought: false
+      });
+      document.getElementById('shop-title').value = '';
+      document.getElementById('shop-qty').value = '';
+      saveState();
+      renderShopping();
+    }
+
+    function toggleShopItem(id) {
+      const it = state.shopping.find(x => x.id === id);
+      if (it) it.bought = !it.bought;
+      saveState();
+      renderShopping();
+    }
+
+    function deleteShopItem(id) {
+      state.shopping = state.shopping.filter(x => x.id !== id);
+      saveState();
+      renderShopping();
+    }
+
+    function clearBoughtItems() {
+      state.shopping = state.shopping.filter(x => !x.bought);
+      saveState();
+      renderShopping();
+    }
+
+    function openUsersModal() {
+      document.getElementById('users-manage-list').innerHTML = state.users.map(u => `
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50">
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full" style="background:${u.color}"></span>
+            <span class="text-sm font-semibold">${u.name}</span>
+          </div>
+          ${state.users.length > 1 ? `<button onclick="removeUser('${u.id}')" class="text-xs text-rose-500">Видалити</button>` : ''}
+        </div>
+      `).join('');
+      document.getElementById('users-modal').classList.remove('hidden');
+    }
+
+    function closeUsersModal() {
+      document.getElementById('users-modal').classList.add('hidden');
+    }
+
+    function addNewUser(ev) {
+      ev.preventDefault();
+      const name = document.getElementById('new-user-name').value.trim();
+      const color = document.getElementById('new-user-color').value;
+      if (!name) return;
+      state.users.push({ id: 'u_' + Date.now(), name, color });
+      document.getElementById('new-user-name').value = '';
+      saveState();
+      openUsersModal();
+      renderAll();
+    }
+
+    function removeUser(id) {
+      state.users = state.users.filter(u => u.id !== id);
+      saveState();
+      openUsersModal();
+      renderAll();
+    }
+
+    function openBackupModal() {
+      document.getElementById('backup-modal').classList.remove('hidden');
+    }
+
+    function closeBackupModal() {
+      document.getElementById('backup-modal').classList.add('hidden');
+    }
+
+    function exportDataClipboard() {
+      navigator.clipboard.writeText(JSON.stringify(state));
+      alert('Код даних скопійовано! Перешли його в Telegram або Viber.');
+    }
+
+    function downloadBackupFile() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'family-schedule-backup.json';
+      a.click();
+    }
+
+    function importDataFromText() {
+      const raw = document.getElementById('import-json-area').value.trim();
+      if (!raw) return;
+      try {
+        state = JSON.parse(raw);
+        saveState();
+        renderAll();
+        closeBackupModal();
+        alert('Графік та списки успішно оновлено!');
+      } catch (e) {
+        alert('Помилка формату коду.');
+      }
+    }
+
+    function resetAllData() {
+      if (!confirm('Очистити всі графіки, події та покупки?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    function renderAll() {
+      renderUserFilters();
+      renderCalendar();
+      renderPlanner();
+      renderShopping();
+    }
+
+    loadState();
+    initMonthYearSelectors();
+    renderAll();
+  </script>
+</body>
+</html>
