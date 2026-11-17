@@ -18,6 +18,11 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    .recording { animation: pulse-subtle 1.5s infinite; background-color: #dc2626 !important; color: white !important; }
+    }
   </style>
 </head>
 <body class="text-slate-800">
@@ -149,7 +154,12 @@
             </div>
           </div>
           <form onsubmit="addEvent(event)" class="space-y-2.5 pt-2 border-t border-slate-100">
-            <input type="text" id="event-title" required placeholder="Що потрібно зробити?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm">
+            <div class="flex gap-2">
+              <input type="text" id="event-title" required placeholder="Що потрібно зробити?" class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm">
+              <button type="button" id="mic-btn" onclick="startVoiceInput()" title="Диктувати голосом" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition active:scale-95 flex items-center justify-center">
+                🎙️
+              </button>
+            </div>
             <div class="grid grid-cols-3 gap-2">
               <input type="time" id="event-time" class="px-2.5 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50">
               <select id="event-user" class="px-2.5 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50"></select>
@@ -331,10 +341,47 @@
       return formatDateKey(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
     }
 
+    // Голосовий ввід (розпізнавання мови)
+    function startVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('На жаль, ваш браузер не підтримує голосове введення. Спробуйте у Google Chrome на телефоні.');
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'uk-UA';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      const micBtn = document.getElementById('mic-btn');
+      micBtn.classList.add('recording');
+      micBtn.textContent = '🔴';
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const speechResult = event.results[0][0].transcript;
+        document.getElementById('event-title').value = speechResult;
+        micBtn.classList.remove('recording');
+        micBtn.textContent = '🎙️';
+      };
+
+      recognition.onerror = function() {
+        micBtn.classList.remove('recording');
+        micBtn.textContent = '🎙️';
+        alert('Не вдалося розпізнати голос. Спробуйте ще раз.');
+      };
+
+      recognition.onspeechend = function() {
+        recognition.stop();
+        micBtn.classList.remove('recording');
+        micBtn.textContent = '🎙️';
+      };
+    }
+
     async function loadState() {
       document.getElementById('sync-room-input').value = cloudRoom;
       try {
-        // Використовуємо стабільний постійний ключ сховища v6, щоб дані не затиралися
         const local = localStorage.getItem('family_assistant_v6_' + cloudRoom);
         if (local) {
           state = JSON.parse(local);
